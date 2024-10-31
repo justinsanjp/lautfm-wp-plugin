@@ -1,0 +1,150 @@
+/* Radio Player Styles */
+.lautfm-radio-player {
+    max-width: 400px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    margin: 20px auto;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.player-badge {
+    display: inline-block;
+    padding: 5px 15px;
+    border-radius: 20px;
+    margin-bottom: 15px;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.player-badge.on-air {
+    background: rgba(255, 0, 0, 0.8);
+    color: white;
+    animation: pulse 2s infinite;
+}
+
+.player-badge.playlist-mode {
+    background: rgba(128, 128, 128, 0.8);
+    color: white;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+.player-info {
+    margin: 15px 0;
+}
+
+.now-playing {
+    font-size: 14px;
+    margin-bottom: 10px;
+    color: rgba(255, 255, 255, 0.9);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.player-controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.play-pause {
+    padding: 8px 16px;
+    background: rgba(33, 150, 243, 0.8);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 13px;
+}
+
+.play-pause:hover {
+    background: rgba(33, 150, 243, 1);
+    transform: scale(1.05);
+}
+
+.volume-slider {
+    flex: 1;
+    height: 4px;
+    -webkit-appearance: none;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+}
+
+.volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 12px;
+    height: 12px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.volume-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+}
+
+/* Floating Player Styles */
+.lautfm-floating-player {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 300px;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+    border-radius: 10px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.lautfm-floating-player .now-playing {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.9);
+    text-align: center;
+}
+
+.lautfm-floating-player .player-controls {
+    justify-content: center;
+}
+
+.lautfm-floating-player .play-pause {
+    padding: 6px 12px;
+    font-size: 12px;
+}
+
+.lautfm-floating-player .volume-slider {
+    max-width: 100px;
+}
+
+/* Widget Styles */
+.lautfm-widget {
+    display: none; /* Standardmäßig ausblenden */
+}
+
+.lautfm-widget.active {
+    display: block; /* Sichtbar, wenn aktiv */
+}
+
+/* Embedded Player Styles */
+.lautfm-embedded {
+    display: block; /* Sichtbar, wenn aktiv */
+}
+
+.lautfm-embedded.hidden {
+    display: none; /* Ausblenden, wenn nicht aktiv */
+}

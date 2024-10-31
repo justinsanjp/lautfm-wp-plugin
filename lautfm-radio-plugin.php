@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Laut.fm Radio Player
  * Description: Ein Custom Radio Player für laut.fm mit Live/Playlist Mode und schwebendem Player
- * Version: 1.1
+ * Version: 1.3
  * Author: justinsanjp
  */
 
@@ -61,7 +61,9 @@ function lautfm_radio_settings_page() {
             'mode' => sanitize_text_field($_POST['lautfm_radio_mode']),
             'station' => sanitize_text_field($_POST['lautfm_radio_station']),
             'floating_player' => sanitize_text_field($_POST['lautfm_floating_player']),
-            'custom_css' => sanitize_textarea_field($_POST['lautfm_custom_css'])
+            'custom_css' => sanitize_textarea_field($_POST['lautfm_custom_css']),
+            'display_type' => sanitize_text_field($_POST['lautfm_display_type']),
+            'iframe_code' => sanitize_textarea_field($_POST['lautfm_iframe_code'])
         );
         update_option('lautfm_radio_settings', $settings);
         echo '<div class="updated"><p>Settings saved.</p></div>';
@@ -74,44 +76,87 @@ function lautfm_radio_settings_page() {
         <form method="post">
             <table class="form-table">
                 <tr>
-                    <th scope="row">Station Name</th>
+                    <th scope="row">Display Type</th>
                     <td>
-                        <input type="text" name="lautfm_radio_station" 
-                               value="<?php echo esc_attr($settings['station']); ?>"
-                               placeholder="justplay">
-                        <p class="description">Der Name deiner laut.fm Station</p>
-                    </td>
-                </tr>
-                <tr>
-                    <th scope="row">Player Mode</th>
-                    <td>
-                        <select name="lautfm_radio_mode">
-                            <option value="live" <?php selected($settings['mode'], 'live'); ?>>Live Mode</option>
-                            <option value="playlist" <?php selected($settings['mode'], 'playlist'); ?>>Playlist Mode</option>
+                        <select name="lautfm_display_type" id="lautfm_display_type" onchange="toggleSettings()">
+                            <option value="embedded" <?php selected($settings['display_type'], 'embedded'); ?>>Embedded</option>
+                            <option value="widget" <?php selected($settings['display_type'], 'widget'); ?>>Widget</option>
                         </select>
-                    </td>
-                </tr>
-                <tr>
-                    <th scope="row">Floating Player</th>
-                    <td>
-                        <select name="lautfm_floating_player">
-                            <option value="disabled" <?php selected($settings['floating_player'], 'disabled'); ?>>Deaktiviert</option>
-                            <option value="enabled" <?php selected($settings['floating_player'], 'enabled'); ?>>Aktiviert</option>
-                        </select>
-                        <p class="description">Aktiviert einen schwebenden Player am unteren Bildschirmrand</p>
-                    </td>
-                </tr>
-                <tr>
-                    <th scope="row">Custom CSS</th>
-                    <td>
-                        <textarea name="lautfm_custom_css" rows="10" cols="50" class="large-text code"><?php echo esc_textarea($settings['custom_css']); ?></textarea>
-                        <p class="description">Füge hier dein eigenes CSS hinzu, um das Aussehen des Players anzupassen</p>
+                        <p class="description">Wähle zwischen Embedded-Player oder Widget.</p>
                     </td>
                 </tr>
             </table>
+
+            <div id="embedded_settings" style="display: <?php echo $settings['display_type'] === 'embedded' ? 'block' : 'none'; ?>;">
+                <h3>Embedded Settings</h3>
+                <div style="background-color: #ffdddd; border-left: 6px solid #f44336; padding: 10px; margin-bottom: 15px;">
+                    <strong>Warnung:</strong> Embedded-Streams sind von laut.fm verboten. Die Nutzung erfolgt auf eigene Gefahr. Wenn Sie sicher sein möchten, verwenden Sie bitte das Widget.
+                </div>
+                <table class="form-table">
+                    <tr>
+                        <th scope="row">Station Name</th>
+                        <td>
+                            <input type="text" name="lautfm_radio_station" 
+                                   value="<?php echo esc_attr($settings['station']); ?>"
+                                   placeholder="justplay">
+                            <p class="description">Der Name deiner laut.fm Station</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Player Mode</th>
+                        <td>
+                            <select name="lautfm_radio_mode">
+                                <option value="live" <?php selected($settings['mode'], 'live'); ?>>Live Mode</option>
+                                <option value="playlist" <?php selected($settings['mode'], 'playlist'); ?>>Playlist Mode</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Floating Player</th>
+                        <td>
+                            <select name="lautfm_floating_player">
+                                <option value="disabled" <?php selected($settings['floating_player'], 'disabled'); ?>>Deaktiviert</option>
+                                <option value="enabled" <?php selected($settings['floating_player'], 'enabled'); ?>>Aktiviert</option>
+                            </select>
+                            <p class="description">Aktiviert einen schwebenden Player am unteren Bildschirmrand</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Custom CSS</th>
+                        <td>
+                            <textarea name="lautfm_custom_css" rows="10" cols="50" class="large-text code"><?php echo esc_textarea($settings['custom_css']); ?></textarea>
+                            <p class="description">Füge hier dein eigenes CSS hinzu, um das Aussehen des Players anzupassen</p>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div id="widget_settings" style="display: <?php echo $settings['display_type'] === 'widget' ? 'block' : 'none'; ?>;">
+                <h3>Widget Configurator</h3>
+                <p>Hier kannst du dir dein Widget zusammen bauen: <a href="https://laut.fm/widgets/configurator/player_for/justplay" target="_blank">Configurator</a></p>
+                <table class="form-table">
+                    <tr>
+                        <th scope="row">Iframe Code</th>
+                        <td>
+                            <textarea name="lautfm_iframe_code" rows="5" cols="50" class="large-text code"><?php echo esc_textarea($settings['iframe_code']); ?></textarea>
+                            <p class="description">Füge hier den Iframe-Code für dein Widget ein.</p>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
             <?php submit_button(); ?>
         </form>
     </div>
+
+    <script type="text/javascript">
+        function toggleSettings() {
+            var displayType = document.getElementById("lautfm_display_type").value;
+            document.getElementById("embedded_settings").style.display = displayType === "embedded" ? "block" : "none";
+            document.getElementById("widget_settings").style.display = displayType === "widget" ? "block" : "none";
+        }
+        document.addEventListener('DOMContentLoaded', toggleSettings);
+    </script>
     <?php
 }
 
